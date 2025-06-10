@@ -154,4 +154,14 @@ RSpec.describe Logfmt::Parser do
     data = parser.parse("key=111 ")
     expect(data["key"]).to eq(111)
   end
+
+  it "parses quoted backslash" do
+    data = parser.parse('key="\\\\"')
+    expect(data["key"]).to eq('\\')
+  end
+
+  it "parses nested quoted quote" do
+    data = parser.parse('key="{\"msg\": \"say \\\\\"hi\\\\\"\"}"')
+    expect(data["key"]).to eq('{"msg": "say \"hi\""}')
+  end
 end

@@ -94,19 +94,19 @@ module Logfmt
           next
         end
         if state == QVALUE
-          if c == "\\"
-            escaped = true
-            value << "\\"
-          elsif c == '"'
-            if escaped
-              escaped = false
-              value.chop! << c
-              next
+          if escaped
+            if c == "\\" or c == '"'
+              value << c
+            else
+              value << "\\" + c
             end
-            output[key.strip] = value
+            escaped = false
+          elsif c == "\\"
+            escaped = true
+          elsif c == '"'
+            output[key] = value
             state = GARBAGE
           else
-            escaped = false
             value << c
           end
           next
